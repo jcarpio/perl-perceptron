@@ -15,16 +15,24 @@ my @sum;
 my @w;
 my @u;
 my @first_layer;
+my @first_layer_weights;
 
 my ($k, $i, $j);
 
 # Read file and obtain values
 
-$a[1][1] = 1;
-$a[1][2] = 2;
-$a[1][3] = 3;
+# initializing first layer
+for ($j=1; $j <= $first_layer_size; $j++) {
+   $first_layer[$j] = $j;
+}
 
-#random weight initialization
+for ($j=1; $j <= $first_layer_size; $j++) {
+   for ($i = 1; $i <= $first_layer_size; $i++) {
+      $first_layer_weights[$j][$i] = 0.5;
+   }
+}
+
+#weight and umbral initialization
 
 for($k=1; $k <= $num_layers; $k++) {
   for ($j = 1; $j <= $layer_size; $j++) {
@@ -37,10 +45,22 @@ for($k=1; $k <= $num_layers; $k++) {
 
 #calculating a's 
 
+$k = 1;
+
+   for ($j = 1; $j <= $layer_size; $j++) { # Selecting neuron in layer from 1 to $layer_size
+      for ($i = 1; $i <= $first_layer_size; $i++) { # Selecting weight in neuron from 1 to $first_layer_size
+         $sum[$k][$j] = $sum[$k][$j] +  $first_layer[$i] * $first_layer_weights[$j][$i];
+      }
+      $a[$k][$j] = $u[$k][$j] * $sum[$k][$j];
+      print " $a[$k][$j] ";
+   }
+   print "\n";
+
+
 for ($k = 2; $k <= $num_layers; $k++) { # Selecting layer number
    for ($j = 1; $j <= $layer_size; $j++) { # Selecting neuron in layer from 1 to $layer_size
       for ($i = 1; $i <= $layer_size; $i++) { # Selecting weight in neuron from 1 to $layer_size 
-         $sum[$k][$j] =+ $a[$k-1][$i] * $w[$k][$j][$i];
+         $sum[$k][$j] = $sum[$k][$j] + $a[$k-1][$i] * $w[$k][$j][$i];
       }
       $a[$k][$j] = $u[$k][$j] * $sum[$k][$j]; 
       print " $a[$k][$j] ";
